@@ -9,9 +9,14 @@ jsonfile = open('tmdb_5000_movies.json', 'w')
 
 import datetime
 
-def __parse_date_format(stringDate):
-	date = datetime.datetime.strptime(stringDate , '%Y-%m-%d')
-	return date
+# def __parse_date_format(stringDate):
+# 	date = datetime.datetime.strptime(stringDate , '%Y-%m-%d').strftime('%Y-%m-%dT%H:%M:%S.%f')
+# 	return date
+
+def parseDate(strDate):
+	parsedDate = strDate.split("-")
+	parsedObject = list(map(int, parsedDate))
+	return parsedObject
 
 fieldnames = (
 	'budget',
@@ -40,17 +45,17 @@ fieldfixers = {
 	'genres': ast.literal_eval,
 	'homepage': str,
 	'id': int,
-	'keywords': ast.literal_eval, #set, dict
+	'keywords': ast.literal_eval,
 	'original_language': str,
 	'original_title':str,
 	'overview': str,
 	'popularity': float,
-	'production_companies': ast.literal_eval, #set, dict
-	'production_countries': ast.literal_eval, #set,dict
+	'production_companies': ast.literal_eval,
+	'production_countries': ast.literal_eval,
 	'release_date': str,
-	'revenue': int, #1990-07-27
+	'revenue': int,
 	'runtime': int,
-	'spoken_languages': ast.literal_eval, #set, dict
+	'spoken_languages': ast.literal_eval,
 	'status': str,
 	'tagline': str,
 	'title': str,
@@ -65,7 +70,7 @@ for row in reader:
 			ffunc = fieldfixers.get(key)
 			if ffunc == 'release_date':
 				stringDate = ffunc(value)
-				convertDate = __parse_date_format(stringDate)
+				convertDate = parseDate(stringDate)
 				row[key] = convertDate
 			elif ffunc:
 					row[key] = ffunc(value)
